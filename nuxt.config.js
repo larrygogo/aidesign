@@ -7,7 +7,7 @@ module.exports = {
     },
     // 配置web头部信息
     head: {
-        titleTemplate: '%s - Nuxt.js',
+        title: 'AI Design - 敲客智能设计图像渲染',
         meta: [
             { lang: 'zh-cn' },
             { charset: 'utf-8' },

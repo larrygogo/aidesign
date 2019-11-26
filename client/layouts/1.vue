@@ -10,20 +10,16 @@
 </template>
 
 <script>
-  import iHeader from '../components/iHeader'
   export default {
-    components: {
-      iHeader
-    },
     props: ['error'],
     layout: 'nologin' // 你可以为错误页面指定自定义的布局
   }
 </script>
 
-<style>
+<style scoped>
   .img404 {
     position: absolute;
-    background: 50% url(~assets/images/public/404.png) no-repeat;
+    /* background: 50% url(~assets/images/public/404.png) no-repeat; */
     display: flex;
     width: 100%;
     background-size: cover;
