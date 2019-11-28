@@ -17,6 +17,26 @@ module.exports = {
     },
     css: [],
     dev: (process.env.NODE_ENV !== 'production'),
+    plugins: [
+        '@/plugins/font-awesome',
+    ],
+    modules: [
+        'nuxt-fontawesome',
+    ],
+    fontawesome: {
+        component: 'fa',
+        imports:
+            [
+                {
+                    set: '@fortawesome/pro-light-svg-icons',
+                    icons: ['fal']
+                },
+                {
+                    set: '@fortawesome/pro-solid-svg-icons',
+                    icons: ['fas']
+                }
+            ]
+    },
     server: {
         host: '127.0.0.1',
         port: '3001',

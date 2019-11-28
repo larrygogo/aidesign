@@ -7,7 +7,7 @@
         <p class="slogan">
           <span>敲客</span>智能设计图像渲染
         </p>
-        <button class="btn">开始使用</button>
+        <button class="btn" @click="$router.push('/console')">开始使用</button>
       </header>
     </div>
   </section>
@@ -78,6 +78,7 @@ export default {
         border: none;
         transition: all .2s;
         cursor: pointer;
+        outline: none;
 
         &:hover {
             box-shadow: 0 2px 20px rgba(52, 107, 55, 0.6);
