@@ -1,7 +1,10 @@
 <template>
   <section class="console-container">
     <header class="header">
-      <img src="~assets/images/login.png" alt="">
+      <div class="back-icon">
+        <!-- <fa :icon="['fal', 'left-']" -->
+      </div>
+      <img src="~assets/images/login.png" alt />
       <span>AI Design</span>
     </header>
     <nuxt />
@@ -38,8 +41,11 @@ body {
     box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.4);
     background-color: #1d252d;
 
-    @media screen and (max-width: 768px){
-      font-size: 30px;
+    @media screen and (max-width: 768px) {
+      --height: calc(1vh / 3);
+      --width: calc(1vw / 3);
+      --target: calc(var(--height) + var(--width));
+      font-size: calc(var(--target) + 24px);
     }
 
     img {

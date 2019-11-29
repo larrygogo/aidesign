@@ -1,4 +1,5 @@
 import mysqlConfig from './mysql.config'
+import fontConfig from './font.config'
 
 export default {
     salt: '$2b$10$a6vRSq24gSBqqV/HktKxpe',
@@ -7,4 +8,5 @@ export default {
 
 export {
     mysqlConfig,
+    fontConfig
 }

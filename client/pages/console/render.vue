@@ -6,7 +6,7 @@
         :style="`border-image: linear-gradient(to top, #00cdac 0%, #8ddad5 ${upload}%, #eee ${upload}% ${100 - upload}%) 30 30;`"
       >
         <input class="input-file" type="file" accept="image/*" multiple @change="uploadImage" />
-        <img v-if="image" :src="image" />
+        <img v-if="image" :src="imageUrl" />
         <fa v-if="!image" :icon="['fal', 'plus']" size="4x" color="#eee" />
       </div>
       <div class="input-group">
@@ -19,14 +19,17 @@
         <div class="input-box">
           <input v-model="descText" class="input" type="text" placeholder="行动点文案" />
         </div>
-        <button class="render-btn" @click="loadingBtn">立即渲染</button>
+        <button class="render-btn" @click="render">立即渲染</button>
       </div>
     </div>
     <div class="render-row">
       <div class="image-row">
-        <div class="loding-row" :class="{ 'loading':  loading }">
+        <div class="loding-row" :class="{ 'loading':  loading }" v-if="!template">
           <p>AI Design</p>
           <span>正在智能渲染</span>
+        </div>
+        <div class="template">
+          <img :src="template" alt="">
         </div>
       </div>
     </div>
@@ -38,12 +41,14 @@ export default {
   layout: "console",
   data() {
     return {
+      imageUrl: null,
       image: null,
       loading: false,
       upload: 0,
       mainText: "",
       subText: "",
-      descText: ""
+      descText: "",
+      template: null
     };
   },
   methods: {
@@ -51,20 +56,64 @@ export default {
       this.loading = !this.loading;
     },
     uploadImage(e) {
-      let reader = new FileReader();
+      let formData = new FormData();
       if (e.target.files[0]) {
-        reader.readAsDataURL(e.target.files[0]);
-        for (let i = 1; i < 101; i++) {
-          setTimeout(() => {
-            this.upload = i;
-          }, 100 * i);
+        let file = e.target.files[0];
+        let name = file.name.split(".")[1] || null;
+        if (name && ['png', 'jpg', 'jpeg'].includes(name)) {
+          if (file.size > 1024 * 1024 * 30) {
+            this.$alert("文件大小超过限制");
+          } else {
+            formData.append("file", file);
+            let config = {
+              headers: { "Content-Type": "multipart/form-data" },
+              onUploadProgress: function(e) {
+                console.log("进度：");
+                console.log(e);
+                if (e.lengthComputable) {
+                  var rate = (this.uploadRate = e.loaded / e.total); //已上传的比例
+                  if (rate < 1) {
+                    //这里的进度只能表明文件已经上传到后台，但是后台有没有处理完还不知道
+                    //因此不能直接显示为100%，不然用户会误以为已经上传完毕，关掉浏览器的话就可能导致上传失败
+                    //等响应回来时，再将进度设为100%
+                    this.upload = rate * 100;
+                  }
+                }
+              }
+            };
+            this.upload = 0
+            this.$axios
+              .post("/api/image/upload", formData, config)
+              .then(res => {
+              
+                if (res.data.success) {
+                  this.imageUrl = '/uploads/runtime/' + res.data.data
+                  this.image = res.data.data
+                  this.upload = 100;
+                }
+              });
+          }
+        } else {
+          this.$alert("文件类型错误");
+          if (e.target.file) {
+            delete e.target.file;
+          }
         }
-        reader.onload = e => {
-          this.image = e.target.result; //img base64
-        };
       } else {
         this.image = null;
       }
+    },
+    render() {
+      this.loading = true
+      this.template = null
+      this.$axios.post('/api/template/render', {
+        image: this.image, main_text: this.mainText, sub_text: this.subText, desc_text: this.descText
+      }).then(res => {
+        this.loading = false
+        if(res.data.success) {
+          this.template = res.data.data
+        }
+      })
     }
   }
 };
@@ -253,6 +302,18 @@ export default {
           span {
             opacity: 1;
           }
+        }
+      }
+
+      .template {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 500px;
+
+        img {
+          width: 80%;
         }
       }
     }

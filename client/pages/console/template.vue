@@ -18,9 +18,14 @@
     </div>
     <div class="template-row">
       <h2 class="title">全部模板</h2>
-      <div class="template-list">
+      <div class="no-template" v-if="list.length < 1">
+        <img src="~assets/images/warn.png" alt />
+        <p>暂时没有任何模板</p>
+      </div>
+      <div class="template-list" v-if="list.length > 0">
         <div class="item" v-for="(item, index) in list" :key="index">
-          <img :src="arrayBufferToBase64(item.cover)" alt />
+          <img :src="item.cover" alt />
+          <p class="name">{{item.name}}</p>
         </div>
       </div>
     </div>
@@ -73,7 +78,9 @@ export default {
             this.$axios
               .post("/api/template/upload", formData, config)
               .then(res => {
-                console.log(res);
+                  if(res.success) {
+                      this.uploadRate = 1;
+                  }
               });
           }
         } else {
@@ -85,22 +92,12 @@ export default {
       }
     },
     getAllTemplate() {
-      this.$axios.get("/api/template").then(res => {
+      this.$axios.get("/api/template/all").then(res => {
         if (res.data.success) {
           this.list = res.data.data;
         }
       });
     },
-    arrayBufferToBase64(buffer) {
-      var binary = "";
-      var bytes = new Uint8Array(buffer.data);
-      var len = bytes.byteLength;
-      for (var i = 0; i < len; i++) {
-        binary += String.fromCharCode(bytes[i]);
-      }
-      console.log(`data:image/png;base64,` + window.btoa(binary))
-      return `data:image/png;base64,` + window.btoa(binary);
-    }
   }
 };
 </script>
@@ -232,7 +229,6 @@ export default {
       font-size: 50px;
       font-weight: 300;
       letter-spacing: 10px;
-      //   color: #00b050;
       background-image: linear-gradient(to right, #0ba360, #3cba92);
       background-clip: text;
       color: transparent;
@@ -240,6 +236,57 @@ export default {
       line-height: 50px;
       border-bottom: 10px solid #dbb9226e;
       margin: 80px 0;
+    }
+
+    .no-template {
+      img {
+        height: 400px;
+      }
+      p {
+        --height: calc(1vh / 3);
+        --width: calc(1vw / 3);
+        --target: calc(var(--height) + var(--width));
+        font-size: calc(var(--target) + 20px);
+        letter-spacing: 5px;
+      }
+    }
+
+    .template-list {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        .item {
+            width: 23%;
+            margin-bottom: 30px;
+
+            @media screen and (max-width: 1400px){
+                width: 30%;
+            }
+
+            @media screen and (max-width: 1200px){
+                width: 47%;
+            }
+
+            @media screen and (max-width: 768px){
+                width: 100%;
+            }
+            img {
+                display: block;
+                width: 100%;
+                transition: all .5s;
+                cursor: pointer;
+            }
+
+            &:hover {
+                img {
+                    box-shadow: 2px 2px 20px rgba(0, 0, 0, .3);
+                }
+            }
+
+            .name {
+                color: #bbb;
+            }
+        }
     }
   }
 }

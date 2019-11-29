@@ -9,6 +9,10 @@ export const sequelize = new Sequelize(
     mysqlConfig.password,
     mysqlConfig.config);
 
+export const random = sequelize.random
+
+
+
 // 导入模型统一管理
 export const Template = sequelize.import(__dirname + '/template.js');
 
