@@ -3,7 +3,7 @@
     <div class="options-row">
       <div
         class="image-row"
-        :style="`border-image: linear-gradient(to top, #00b04f6e ${upload}% ${upload}% , #eee ${upload}% ${100 - upload}%) 30 30;`"
+        :style="`border-image: linear-gradient(to top, #00cdac 0%, #8ddad5 ${upload}%, #eee ${upload}% ${100 - upload}%) 30 30;`"
       >
         <input class="input-file" type="file" accept="image/*" multiple @change="uploadImage" />
         <img v-if="image" :src="image" />
@@ -11,13 +11,13 @@
       </div>
       <div class="input-group">
         <div class="input-box">
-          <input class="input" type="text" placeholder="主文案" />
+          <input v-model="mainText" class="input" type="text" placeholder="主文案" />
         </div>
         <div class="input-box">
-          <input class="input" type="text" placeholder="副文案" />
+          <input v-model="subText" class="input" type="text" placeholder="副文案" />
         </div>
         <div class="input-box">
-          <input class="input" type="text" placeholder="行动点文案" />
+          <input v-model="descText" class="input" type="text" placeholder="行动点文案" />
         </div>
         <button class="render-btn" @click="loadingBtn">立即渲染</button>
       </div>
@@ -40,7 +40,10 @@ export default {
     return {
       image: null,
       loading: false,
-      upload: 0
+      upload: 0,
+      mainText: "",
+      subText: "",
+      descText: ""
     };
   },
   methods: {
@@ -51,6 +54,11 @@ export default {
       let reader = new FileReader();
       if (e.target.files[0]) {
         reader.readAsDataURL(e.target.files[0]);
+        for (let i = 1; i < 101; i++) {
+          setTimeout(() => {
+            this.upload = i;
+          }, 100 * i);
+        }
         reader.onload = e => {
           this.image = e.target.result; //img base64
         };
@@ -65,7 +73,7 @@ export default {
 <style lang="scss" scoped>
 @keyframes LOADING {
   0% {
-    color: #00b050;
+    color: #0ba360;
   }
   100% {
     text-shadow: 10px 10px 0 #449bf8;
@@ -75,6 +83,13 @@ export default {
 .page {
   display: flex;
   flex-direction: row;
+  width: 1980px;
+  max-width: 1980px;
+  margin: 0 auto;
+
+  @media screen and (max-width: 1980px) {
+    width: calc(100% - 40px);
+  }
 
   @media screen and (max-width: 1000px) {
     flex-direction: column;
@@ -89,6 +104,7 @@ export default {
       font-size: 24px;
       color: #fff;
       outline: none;
+      background-image: linear-gradient(to right, #0ba360, #3cba92);
       background-color: #00b050;
       margin-top: 20px;
       transition: all 0.5s;
@@ -150,7 +166,7 @@ export default {
       .input {
         width: 100%;
         height: 50px;
-        border: 3px solid #eee;
+        border: 1px solid #eee;
         outline: none;
         padding: 10px;
         box-sizing: border-box;
@@ -165,13 +181,17 @@ export default {
           font-weight: 300;
           text-align: center;
         }
-
+        &:hover {
+          background-color: #f7f7f7;
+        }
         &:focus {
-          border-color: #00b04f6e;
+          background-color: #fff;
+          // border-color: #00b04f6e;
+          box-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
 
-          &::placeholder {
-            color: #00b04f60;
-          }
+          // &::placeholder {
+          //   color: #00b04f60;
+          // }
         }
 
         &:last-of-type {
@@ -198,13 +218,24 @@ export default {
         p {
           margin: 0;
           font-family: "Arvo-BoldItalic";
-          font-size: 10vmin;
+          font-size: 100px;
           text-align: center;
           color: #eee;
           letter-spacing: 5px;
 
+          @media screen and (max-width: 1200px) {
+            font-size: 80px;
+          }
+
+          @media screen and (max-width: 768px) {
+            font-size: 10vmin;
+          }
+
           &.loading {
-            color: #00b050;
+            background-image: linear-gradient(to right, #0ba360, #3cba92);
+            background-clip: text;
+            color: transparent;
+            // color: #00b050;
             animation: LOADING 2s infinite alternate ease;
           }
         }

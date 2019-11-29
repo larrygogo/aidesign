@@ -5,7 +5,7 @@
         <p>智能渲染</p>
         <span>立即前往</span>
       </div>
-      <div class="item">
+      <div class="item" @click="$router.push('/console/template')">
         <p>模板管理</p>
         <!-- <span>立即前往</span> -->
       </div>
@@ -32,6 +32,13 @@ export default {
   justify-content: space-around;
   flex-wrap: wrap;
   padding: 40px;
+  width: 1980px;
+  max-width: 1980px;
+  margin: 0 auto;
+
+  @media screen and (max-width: 1980px) {
+    width: calc(100% - 80px);
+  }
 
   @media screen and (max-width: 768px) {
     padding: 20px;

@@ -15,12 +15,22 @@ module.exports = {
             { hid: 'description', name: 'description', content: 'Meta description' }
         ]
     },
-    css: [],
+    css: [
+        'element-ui/lib/theme-chalk/index.css'
+    ],
+    axios: {
+        // 网关需要在后面添加/sclpay
+        baseURL: '',
+        proxy: false, // Can be also an object with default options
+        credentials: true
+    },
     dev: (process.env.NODE_ENV !== 'production'),
     plugins: [
         '@/plugins/font-awesome',
+        '@/plugins/element-ui',
     ],
     modules: [
+        '@nuxtjs/axios',
         'nuxt-fontawesome',
     ],
     fontawesome: {

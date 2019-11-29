@@ -10,7 +10,7 @@ const r = path => resolve(__dirname, path)
 
 const app = new Koa()
 const nuxt = new Nuxt(config)
-const middleware = ['ExceptionHandler', 'Router', 'KoaBody']
+const middleware = ['KoaBody', 'ExceptionHandler', 'Router']
 
 function useMiddleware(app) {
     return R.map(R.compose(

@@ -59,7 +59,9 @@ export default {
         margin-bottom: 20px;
 
         span {
-          color: #00b050;
+          background-image: linear-gradient(to right, #0ba360, #3cba92);
+          background-clip: text;
+          color: transparent;
         }
       }
 
@@ -73,7 +75,8 @@ export default {
         height: 50px;
         min-width: 200px;
         font-size: 24px;
-        background-color: #00b050;
+        // background-color: #00b050;
+        background-image: linear-gradient(to right, #0ba360, #3cba92);
         color: #ffffff;
         border: none;
         transition: all .2s;
